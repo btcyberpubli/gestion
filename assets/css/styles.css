@@ -5,26 +5,27 @@
 }
 
 :root {
-  --color-primary: #2563eb;
-  --color-primary-dark: #1d4ed8;
-  --color-success: #10b981;
-  --color-danger: #ef4444;
-  --color-warning: #f59e0b;
-  --color-info: #3b82f6;
-  --color-light: #f9fafb;
-  --color-dark: #1f2937;
-  --color-gray: #6b7280;
-  --color-border: #e5e7eb;
-  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  --color-primary: #0066cc;
+  --color-primary-dark: #004499;
+  --color-success: #004466;
+  --color-danger: #cc0000;
+  --color-warning: #0088dd;
+  --color-info: #0099ff;
+  --color-light: #f0f4f8;
+  --color-dark: #1a1a1a;
+  --color-gray: #666666;
+  --color-border: #d0d0d0;
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.15);
+  --shadow-lg: 0 10px 20px rgba(0, 0, 0, 0.2);
 }
 
 body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #f3f4f6;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+  background: linear-gradient(135deg, #f0f4f8 0%, #e8ecf1 100%);
   color: var(--color-dark);
   line-height: 1.6;
+  font-weight: 300;
 }
 
 /* ===== NOTIFICACIONES ===== */
@@ -32,26 +33,28 @@ body {
   position: fixed;
   top: 20px;
   right: 20px;
-  padding: 15px 20px;
+  padding: 14px 20px;
   border-radius: 8px;
-  font-weight: 500;
+  font-weight: 300;
+  font-size: 14px;
   z-index: 9999;
   animation: slideIn 0.3s ease;
-  box-shadow: var(--shadow-lg);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  letter-spacing: 0.3px;
 }
 
 .notificacion-success {
-  background-color: var(--color-success);
+  background: linear-gradient(135deg, #004466 0%, #003355 100%);
   color: white;
 }
 
 .notificacion-error {
-  background-color: var(--color-danger);
+  background: linear-gradient(135deg, #cc0000 0%, #990000 100%);
   color: white;
 }
 
 .notificacion-warning {
-  background-color: var(--color-warning);
+  background: linear-gradient(135deg, #0088dd 0%, #0066cc 100%);
   color: white;
 }
 
@@ -84,7 +87,8 @@ header {
 
 header h1 {
   font-size: 24px;
-  font-weight: 700;
+  font-weight: 300;
+  letter-spacing: 1px;
 }
 
 .header-content {
@@ -123,43 +127,42 @@ header h1 {
   padding: 12px 24px;
   border: none;
   border-radius: 8px;
-  font-weight: 600;
+  font-weight: 300;
   cursor: pointer;
-  transition: all 0.3s;
-  font-size: 16px;
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  font-size: 14px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
 }
 
 .btn-primary {
-  background-color: var(--color-primary);
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
   color: white;
 }
 
 .btn-primary:hover {
-  background-color: var(--color-primary-dark);
   transform: translateY(-2px);
-  box-shadow: var(--shadow-lg);
+  box-shadow: 0 8px 16px rgba(0, 102, 204, 0.25);
 }
 
 .btn-success {
-  background-color: var(--color-success);
+  background: linear-gradient(135deg, var(--color-success) 0%, #003366 100%);
   color: white;
 }
 
 .btn-success:hover {
-  background-color: #059669;
   transform: translateY(-2px);
-  box-shadow: var(--shadow-lg);
+  box-shadow: 0 8px 16px rgba(0, 68, 102, 0.25);
 }
 
 .btn-danger {
-  background-color: var(--color-danger);
+  background: linear-gradient(135deg, var(--color-danger) 0%, #990000 100%);
   color: white;
 }
 
 .btn-danger:hover {
-  background-color: #dc2626;
   transform: translateY(-2px);
-  box-shadow: var(--shadow-lg);
+  box-shadow: 0 8px 16px rgba(204, 0, 0, 0.25);
 }
 
 .btn-warning {
@@ -211,86 +214,94 @@ header h1 {
 
 .btn-grande-principal {
   grid-column: 1;
-  height: 350px;
-  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  height: 280px;
+  background: linear-gradient(135deg, #0066cc 0%, #004499 100%);
   border: none;
-  border-radius: 16px;
+  border-radius: 12px;
   color: white;
-  font-weight: 700;
-  font-size: 24px;
+  font-weight: 300;
+  font-size: 20px;
   cursor: pointer;
   box-shadow: var(--shadow-lg);
-  transition: all 0.3s;
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
+  letter-spacing: 0.5px;
 }
 
 .btn-grande-principal:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
+  transform: translateY(-6px);
+  box-shadow: 0 15px 35px rgba(0, 102, 204, 0.3);
 }
 
 .btn-principal-contenido {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 20px;
+  gap: 15px;
 }
 
 .btn-principal-contenido h2 {
   margin: 0;
-  font-size: 28px;
+  font-size: 24px;
+  font-weight: 300;
+  letter-spacing: 1px;
 }
 
 /* Botones secundarios en fila */
 .botones-secundarios {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-  gap: 15px;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 12px;
 }
 
 .btn-secundario {
-  padding: 20px 15px;
+  padding: 14px 12px;
   border: none;
-  border-radius: 12px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #0066cc 0%, #003399 100%);
   color: white;
-  font-weight: 600;
-  font-size: 15px;
+  font-weight: 300;
+  font-size: 12px;
   cursor: pointer;
   box-shadow: var(--shadow-md);
-  transition: all 0.3s;
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
 }
 
 .btn-secundario:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-lg);
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px rgba(0, 102, 204, 0.25);
 }
 
 /* Panel de reportes */
 .reportes-panel {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  gap: 12px;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 10px;
 }
 
 .btn-reportes {
-  padding: 15px 12px;
+  padding: 12px 10px;
   border: none;
-  border-radius: 10px;
-  background-color: #f59e0b;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #1a1a1a 0%, #333333 100%);
   color: white;
-  font-weight: 600;
-  font-size: 14px;
+  font-weight: 300;
+  font-size: 11px;
   cursor: pointer;
   box-shadow: var(--shadow-sm);
-  transition: all 0.3s;
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
 }
 
 .btn-reportes:hover {
-  background-color: #d97706;
-  transform: translateY(-3px);
+  background: linear-gradient(135deg, #333333 0%, #555555 100%);
+  transform: translateY(-2px);
   box-shadow: var(--shadow-md);
 }
 
@@ -326,8 +337,10 @@ header h1 {
 label {
   display: block;
   margin-bottom: 8px;
-  font-weight: 600;
+  font-weight: 400;
   color: var(--color-dark);
+  font-size: 14px;
+  letter-spacing: 0.3px;
 }
 
 input[type="text"],
@@ -414,15 +427,16 @@ textarea:focus {
 }
 
 .modal-content {
-  background-color: white;
+  background: linear-gradient(135deg, #ffffff 0%, #f5f7fa 100%);
   padding: 40px;
   border-radius: 12px;
-  box-shadow: var(--shadow-lg);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
   width: 90%;
   max-width: 600px;
   max-height: 90vh;
   overflow-y: auto;
   animation: slideUp 0.3s;
+  border: 1px solid rgba(0, 102, 204, 0.1);
 }
 
 @keyframes slideUp {
@@ -442,12 +456,14 @@ textarea:focus {
   align-items: center;
   margin-bottom: 20px;
   padding-bottom: 15px;
-  border-bottom: 2px solid var(--color-border);
+  border-bottom: 1px solid rgba(0, 102, 204, 0.2);
 }
 
 .modal-header h2 {
-  font-size: 22px;
+  font-size: 20px;
   color: var(--color-dark);
+  font-weight: 300;
+  letter-spacing: 0.5px;
 }
 
 .modal-close {
@@ -457,6 +473,7 @@ textarea:focus {
   cursor: pointer;
   color: var(--color-gray);
   transition: color 0.3s;
+  font-weight: 300;
 }
 
 .modal-close:hover {
@@ -687,8 +704,8 @@ tbody tr:hover {
   }
 
   .btn-secundario {
-    padding: 18px 12px;
-    font-size: 14px;
+    padding: 14px 10px;
+    font-size: 12px;
   }
 
   .reportes-panel {
@@ -696,8 +713,8 @@ tbody tr:hover {
   }
 
   .btn-reportes {
-    padding: 12px 10px;
-    font-size: 13px;
+    padding: 11px 9px;
+    font-size: 11px;
   }
 
   .btn-grande {
@@ -719,6 +736,10 @@ tbody tr:hover {
   .header-content {
     flex-direction: column;
     gap: 15px;
+  }
+
+  header h1 {
+    font-size: 18px;
   }
 
   .login-box {
