@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - Sistema de Inventario</title>
+  <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+  <header>
+    <div class="header-content">
+      <h1>📦 Sistema de Inventario y Ventas</h1>
+      <div class="header-user">
+        <span id="usuarioNombre"></span>
+        <button class="btn-logout" onclick="logout()">Salir</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <!-- BOTONES PRINCIPALES -->
+    <div class="dashboard-grid">
+      <button class="btn-grande btn-primary" onclick="abrirModalAgregarStock()">
+        <svg fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 11-2 0 1 1 0 012 0zm0 6a1 1 0 11-2 0 1 1 0 012 0zm4-2a1 1 0 11-2 0 1 1 0 012 0zm-4-2a1 1 0 11-2 0 1 1 0 012 0z" clip-rule="evenodd"/>
+        </svg>
+        ➕ Agregar Stock
+      </button>
+      <button class="btn-grande btn-info" onclick="abrirModalVerStock()" style="background-color: var(--color-info);">
+        <svg fill="currentColor" viewBox="0 0 20 20">
+          <path d="M10.5 1.5H3.75A2.25 2.25 0 001.5 3.75v12.5A2.25 2.25 0 003.75 18.5h12.5a2.25 2.25 0 002.25-2.25V9.5M10.5 1.5v8m0 0H2m8.5 0h8.5"/>
+        </svg>
+        👁️ Ver Stock
+      </button>
+      <button class="btn-grande btn-success" onclick="abrirModalGenerarVenta()">
+        <svg fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"/>
+        </svg>
+        💰 Generar Venta
+      </button>
+      <button class="btn-grande btn-warning" onclick="abrirModalReportes()">
+        <svg fill="currentColor" viewBox="0 0 20 20">
+          <path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z"/>
+        </svg>
+        📊 Reportes
+      </button>
+    </div>
+
+    <!-- RESUMEN RÁPIDO -->
+    <div id="resumenRapido"></div>
+  </div>
+
+  <!-- ===== MODAL: AGREGAR STOCK ===== -->
+  <div id="modalAgregarStock" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>➕ Agregar Stock a Producto</h2>
+        <button class="modal-close" onclick="cerrarModal('modalAgregarStock')">&times;</button>
+      </div>
+      <form id="formAgregarStock">
+        <div class="form-group">
+          <label for="productoAStock">Producto</label>
+          <select id="productoAStock" required>
+            <option value="">Seleccionar producto...</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="cantidadStock">Cantidad a agregar</label>
+          <input type="number" id="cantidadStock" min="1" required>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="cerrarModal('modalAgregarStock')">Cancelar</button>
+          <button type="submit" class="btn btn-primary">Agregar Stock</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ===== MODAL: VER STOCK ===== -->
+  <div id="modalVerStock" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>👁️ Inventario de Productos</h2>
+        <button class="modal-close" onclick="cerrarModal('modalVerStock')">&times;</button>
+      </div>
+      <table id="tablaStock">
+        <thead>
+          <tr>
+            <th>Producto</th>
+            <th>Stock Actual</th>
+            <th>Stock Mínimo</th>
+            <th>Costo</th>
+            <th>Precio Venta</th>
+            <th>Estado</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+      <div class="modal-footer">
+        <button class="btn btn-primary" onclick="cerrarModal('modalVerStock')">Cerrar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== MODAL: GENERAR VENTA ===== -->
+  <div id="modalGenerarVenta" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>💰 Generar Nueva Venta</h2>
+        <button class="modal-close" onclick="cerrarModal('modalGenerarVenta')">&times;</button>
+      </div>
+
+      <!-- PASO 1: Seleccionar cliente -->
+      <div id="pasoCliente">
+        <h3 style="margin-bottom: 20px;">Paso 1: Seleccionar Cliente</h3>
+        <div class="form-group">
+          <label for="clienteVenta">Cliente</label>
+          <select id="clienteVenta" required>
+            <option value="">Seleccionar cliente...</option>
+          </select>
+        </div>
+        <button class="btn btn-primary" onclick="continuarPasoProductos()">Siguiente →</button>
+      </div>
+
+      <!-- PASO 2: Agregar productos -->
+      <div id="pasoProductos" style="display: none;">
+        <h3 style="margin-bottom: 20px;">Paso 2: Agregar Productos</h3>
+        
+        <div class="form-group">
+          <label for="productoVenta">Producto</label>
+          <select id="productoVenta" required>
+            <option value="">Seleccionar producto...</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="cantidadProducto">Cantidad</label>
+          <input type="number" id="cantidadProducto" min="1" required>
+        </div>
+
+        <div class="form-group">
+          <label for="descuentoProducto">Descuento (%)</label>
+          <input type="number" id="descuentoProducto" min="0" max="100" value="0">
+        </div>
+
+        <button class="btn btn-success" onclick="agregarProductoVenta()">Agregar Producto</button>
+
+        <!-- Items agregados -->
+        <div id="itemsVenta" style="margin-top: 30px;"></div>
+
+        <!-- Resumen -->
+        <div class="resumen-venta" id="resumenVentaDiv" style="display: none;">
+          <div class="resumen-row">
+            <span>Subtotal:</span>
+            <span id="subtotalVenta">$0.00</span>
+          </div>
+          <div class="resumen-row">
+            <span>Descuento Total:</span>
+            <span id="descuentoVenta">$0.00</span>
+          </div>
+          <div class="resumen-row total">
+            <span>Total a Pagar:</span>
+            <span id="totalVenta">$0.00</span>
+          </div>
+        </div>
+
+        <div style="margin-top: 30px;">
+          <button class="btn btn-secondary" onclick="volverPasoCliente()">← Anterior</button>
+          <button class="btn btn-primary" onclick="confirmarVenta()" style="margin-left: 10px;">Confirmar Venta</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== MODAL: REPORTES ===== -->
+  <div id="modalReportes" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>📊 Reportes</h2>
+        <button class="modal-close" onclick="cerrarModal('modalReportes')">&times;</button>
+      </div>
+
+      <h3 style="margin-bottom: 20px;">Ganancias Mensuales</h3>
+      <div class="form-group">
+        <label for="mesPeso">Mes</label>
+        <input type="month" id="mesReporte" value="">
+      </div>
+      <button class="btn btn-primary" onclick="cargarGananciasMensuales()" style="margin-bottom: 20px;">Cargar Reporte</button>
+
+      <div id="reporteGanancias"></div>
+
+      <hr style="margin: 30px 0; border: none; border-top: 2px solid #e5e7eb;">
+
+      <h3 style="margin-bottom: 20px;">Top Productos Vendidos</h3>
+      <button class="btn btn-primary" onclick="cargarTopProductos()" style="margin-bottom: 20px;">Ver Top 10</button>
+      <table id="tablaTopProductos" style="display: none;">
+        <thead>
+          <tr>
+            <th>Producto</th>
+            <th>Cantidad</th>
+            <th>Ingresos</th>
+            <th>Ganancia</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+
+      <hr style="margin: 30px 0; border: none; border-top: 2px solid #e5e7eb;">
+
+      <h3 style="margin-bottom: 20px;">Stock Bajo</h3>
+      <button class="btn btn-primary" onclick="cargarStockBajo()" style="margin-bottom: 20px;">Ver Productos Bajo Stock</button>
+      <table id="tablaStockBajo" style="display: none;">
+        <thead>
+          <tr>
+            <th>Producto</th>
+            <th>Stock Actual</th>
+            <th>Stock Mínimo</th>
+            <th>Faltante</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+
+      <div class="modal-footer" style="margin-top: 30px;">
+        <button class="btn btn-primary" onclick="cerrarModal('modalReportes')">Cerrar</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="assets/js/config.js"></script>
+  <script src="assets/js/app.js"></script>
+</body>
+</html>
