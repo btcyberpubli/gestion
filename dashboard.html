@@ -18,35 +18,43 @@
   </header>
 
   <div class="container">
-    <!-- BOTONES PRINCIPALES -->
-    <div class="dashboard-grid">
-      <button class="btn-grande btn-primary" onclick="abrirModalAgregarStock()">
-        <svg fill="currentColor" viewBox="0 0 20 20">
-          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 11-2 0 1 1 0 012 0zm0 6a1 1 0 11-2 0 1 1 0 012 0zm4-2a1 1 0 11-2 0 1 1 0 012 0zm-4-2a1 1 0 11-2 0 1 1 0 012 0z" clip-rule="evenodd"/>
-        </svg>
-        ➕ Agregar Stock
+    <!-- DISEÑO MINIMALISTA: GENERAR VENTA (Grande) + Botones secundarios -->
+    <div class="dashboard-grid-new">
+      <!-- BOTÓN PRINCIPAL: GENERAR VENTA (50% altura) -->
+      <button class="btn-grande-principal" onclick="abrirModalGenerarVenta()">
+        <div class="btn-principal-contenido">
+          <svg fill="currentColor" viewBox="0 0 20 20" style="width: 60px; height: 60px;">
+            <path fill-rule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"/>
+          </svg>
+          <h2>💰 GENERAR VENTA</h2>
+        </div>
       </button>
-      <button class="btn-grande btn-info" onclick="abrirModalVerStock()" style="background-color: var(--color-info);">
-        <svg fill="currentColor" viewBox="0 0 20 20">
-          <path d="M10.5 1.5H3.75A2.25 2.25 0 001.5 3.75v12.5A2.25 2.25 0 003.75 18.5h12.5a2.25 2.25 0 002.25-2.25V9.5M10.5 1.5v8m0 0H2m8.5 0h8.5"/>
-        </svg>
-        👁️ Ver Stock
-      </button>
-      <button class="btn-grande btn-success" onclick="abrirModalGenerarVenta()">
-        <svg fill="currentColor" viewBox="0 0 20 20">
-          <path fill-rule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"/>
-        </svg>
-        💰 Generar Venta
-      </button>
-      <button class="btn-grande btn-warning" onclick="abrirModalReportes()">
-        <svg fill="currentColor" viewBox="0 0 20 20">
-          <path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z"/>
-        </svg>
-        📊 Reportes
-      </button>
+
+      <!-- BOTONES SECUNDARIOS (3 columnas) -->
+      <div class="botones-secundarios">
+        <button class="btn-secundario" onclick="abrirModalAgregarStock()" style="background-color: #3b82f6;">
+          ➕ Agregar Stock
+        </button>
+        <button class="btn-secundario" onclick="abrirModalVerStock()" style="background-color: #06b6d4;">
+          👁️ Ver Stock
+        </button>
+        <button class="btn-secundario" onclick="abrirModalClientes()" style="background-color: #8b5cf6;">
+          👥 Clientes
+        </button>
+      </div>
+
+      <!-- REPORTES (Panel inferior) -->
+      <div class="reportes-panel">
+        <button class="btn-reportes" onclick="abrirModalReportes()">
+          📊 Ver Reportes
+        </button>
+        <button class="btn-reportes" onclick="abrirModalNuevoProducto()">
+          📝 Nuevo Producto
+        </button>
+      </div>
     </div>
 
-    <!-- RESUMEN RÁPIDO -->
+    <!-- RESUMEN RÁPIDO (Minimalista) -->
     <div id="resumenRapido"></div>
   </div>
 
@@ -75,7 +83,41 @@
       </form>
     </div>
   </div>
-
+  <!-- ===== MODAL: NUEVO PRODUCTO ===== -->
+  <div id="modalNuevoProducto" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>📝 Nuevo Producto</h2>
+        <button class="modal-close" onclick="cerrarModal('modalNuevoProducto')">&times;</button>
+      </div>
+      <form id="formNuevoProducto">
+        <div class="form-group">
+          <label for="nombreProducto">Nombre del Producto</label>
+          <input type="text" id="nombreProducto" required placeholder="Ej: Laptop HP">
+        </div>
+        <div class="form-group">
+          <label for="precioCosto">Precio de Costo</label>
+          <input type="number" id="precioCosto" min="0" step="0.01" required placeholder="0.00">
+        </div>
+        <div class="form-group">
+          <label for="precioVenta">Precio de Venta</label>
+          <input type="number" id="precioVenta" min="0" step="0.01" required placeholder="0.00">
+        </div>
+        <div class="form-group">
+          <label for="stockInicial">Stock Inicial</label>
+          <input type="number" id="stockInicial" min="0" required placeholder="0">
+        </div>
+        <div class="form-group">
+          <label for="stockMinimo">Stock Mínimo</label>
+          <input type="number" id="stockMinimo" value="10" required placeholder="10">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="cerrarModal('modalNuevoProducto')">Cancelar</button>
+          <button type="submit" class="btn btn-primary">Crear Producto</button>
+        </div>
+      </form>
+    </div>
+  </div>
   <!-- ===== MODAL: VER STOCK ===== -->
   <div id="modalVerStock" class="modal">
     <div class="modal-content">
@@ -168,6 +210,30 @@
           <button class="btn btn-secondary" onclick="volverPasoCliente()">← Anterior</button>
           <button class="btn btn-primary" onclick="confirmarVenta()" style="margin-left: 10px;">Confirmar Venta</button>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== MODAL: CLIENTES ===== -->
+  <div id="modalClientes" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>👥 Clientes y Deudas</h2>
+        <button class="modal-close" onclick="cerrarModal('modalClientes')">&times;</button>
+      </div>
+      <table id="tablaClientes">
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Email</th>
+            <th>Deuda Total</th>
+            <th>Acción</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+      <div class="modal-footer">
+        <button class="btn btn-primary" onclick="cerrarModal('modalClientes')">Cerrar</button>
       </div>
     </div>
   </div>

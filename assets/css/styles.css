@@ -201,6 +201,99 @@ header h1 {
   margin-bottom: 40px;
 }
 
+/* ===== NUEVO DISEÑO: OPCIÓN A ===== */
+.dashboard-grid-new {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+  margin-bottom: 40px;
+}
+
+.btn-grande-principal {
+  grid-column: 1;
+  height: 350px;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  border: none;
+  border-radius: 16px;
+  color: white;
+  font-weight: 700;
+  font-size: 24px;
+  cursor: pointer;
+  box-shadow: var(--shadow-lg);
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.btn-grande-principal:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
+}
+
+.btn-principal-contenido {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.btn-principal-contenido h2 {
+  margin: 0;
+  font-size: 28px;
+}
+
+/* Botones secundarios en fila */
+.botones-secundarios {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 15px;
+}
+
+.btn-secundario {
+  padding: 20px 15px;
+  border: none;
+  border-radius: 12px;
+  color: white;
+  font-weight: 600;
+  font-size: 15px;
+  cursor: pointer;
+  box-shadow: var(--shadow-md);
+  transition: all 0.3s;
+}
+
+.btn-secundario:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+
+/* Panel de reportes */
+.reportes-panel {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 12px;
+}
+
+.btn-reportes {
+  padding: 15px 12px;
+  border: none;
+  border-radius: 10px;
+  background-color: #f59e0b;
+  color: white;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.3s;
+}
+
+.btn-reportes:hover {
+  background-color: #d97706;
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+}
+
 .btn-grande {
   padding: 40px 30px;
   font-size: 18px;
@@ -569,6 +662,42 @@ tbody tr:hover {
 @media (max-width: 768px) {
   .dashboard-grid {
     grid-template-columns: 1fr;
+  }
+
+  .dashboard-grid-new {
+    grid-template-columns: 1fr;
+  }
+
+  .btn-grande-principal {
+    height: 280px;
+    font-size: 20px;
+  }
+
+  .btn-principal-contenido h2 {
+    font-size: 22px;
+  }
+
+  .btn-principal-contenido svg {
+    width: 50px;
+    height: 50px;
+  }
+
+  .botones-secundarios {
+    grid-template-columns: 1fr;
+  }
+
+  .btn-secundario {
+    padding: 18px 12px;
+    font-size: 14px;
+  }
+
+  .reportes-panel {
+    grid-template-columns: 1fr;
+  }
+
+  .btn-reportes {
+    padding: 12px 10px;
+    font-size: 13px;
   }
 
   .btn-grande {

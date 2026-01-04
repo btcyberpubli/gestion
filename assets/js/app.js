@@ -6,6 +6,7 @@
 let ventaActual = null;
 let clienteSeleccionado = null;
 let productosVenta = [];
+let procesandoVenta = false; // Flag para evitar doble click
 
 // ===== INICIALIZACIÓN =====
 document.addEventListener('DOMContentLoaded', () => {
@@ -86,6 +87,54 @@ async function cargarClientes() {
   }
 }
 
+// ===== ABRIR MODAL DE CLIENTES =====
+async function abrirModalClientes() {
+  try {
+    const response = await fetchAPI('/clientes?activo=true');
+    const tbody = document.querySelector('#tablaClientes tbody');
+    tbody.innerHTML = '';
+
+    response.clientes.forEach(c => {
+      const fila = document.createElement('tr');
+      fila.innerHTML = `
+        <td>${c.nombre}</td>
+        <td>${c.email}</td>
+        <td style="color: ${c.deuda_total > 0 ? '#ef4444' : '#10b981'}; font-weight: bold;">
+          ${formatoMoneda(c.deuda_total)}
+        </td>
+        <td>
+          ${c.deuda_total > 0 ? `<button class="btn btn-sm btn-success" onclick="abrirModalPagarDeuda('${c.id}', '${c.nombre}', ${c.deuda_total})">Pagar</button>` : '<span style="color: #999;">Sin deuda</span>'}
+        </td>
+      `;
+      tbody.appendChild(fila);
+    });
+
+    abrirModal('modalClientes');
+  } catch (error) {
+    mostrarNotificacion(error.message, 'error');
+  }
+}
+
+// ===== PAGAR DEUDA =====
+async function abrirModalPagarDeuda(clienteId, clienteNombre, deudaTotal) {
+  const monto = prompt(`Pagar deuda de ${clienteNombre}\nDeuda actual: ${formatoMoneda(deudaTotal)}\n\nIngresa el monto a pagar:`, formatoMoneda(deudaTotal).replace('$', ''));
+  
+  if (!monto || isNaN(parseFloat(monto))) {
+    return;
+  }
+
+  try {
+    await fetchAPI(`/clientes/${clienteId}/pagar-deuda`, 'POST', {
+      monto: parseFloat(monto)
+    });
+
+    mostrarNotificacion(`✅ Deuda pagada exitosamente`, 'success');
+    abrirModalClientes(); // Recargar modal
+  } catch (error) {
+    mostrarNotificacion(error.message, 'error');
+  }
+}
+
 // ===== AGREGAR STOCK =====
 function abrirModalAgregarStock() {
   document.getElementById('formAgregarStock').reset();
@@ -106,6 +155,44 @@ document.getElementById('formAgregarStock')?.addEventListener('submit', async (e
 
     mostrarNotificacion(`Stock agregado: ${response.producto.nombre}`, 'success');
     cerrarModal('modalAgregarStock');
+    cargarProductos();
+  } catch (error) {
+    mostrarNotificacion(error.message, 'error');
+  }
+});
+
+// ===== NUEVO PRODUCTO =====
+function abrirModalNuevoProducto() {
+  document.getElementById('formNuevoProducto').reset();
+  document.getElementById('stockMinimo').value = '10';
+  abrirModal('modalNuevoProducto');
+}
+
+document.getElementById('formNuevoProducto')?.addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  const nombre = document.getElementById('nombreProducto').value;
+  const precio_compra = parseFloat(document.getElementById('precioCosto').value);
+  const precio_venta = parseFloat(document.getElementById('precioVenta').value);
+  const stock_actual = parseInt(document.getElementById('stockInicial').value);
+  const stock_minimo = parseInt(document.getElementById('stockMinimo').value);
+
+  if (precio_venta <= precio_compra) {
+    mostrarNotificacion('El precio de venta debe ser mayor que el costo', 'warning');
+    return;
+  }
+
+  try {
+    const response = await fetchAPI('/productos', 'POST', {
+      nombre,
+      precio_compra,
+      precio_venta,
+      stock_actual,
+      stock_minimo
+    });
+
+    mostrarNotificacion(`✅ Producto creado: ${response.producto.nombre}`, 'success');
+    cerrarModal('modalNuevoProducto');
     cargarProductos();
   } catch (error) {
     mostrarNotificacion(error.message, 'error');
@@ -289,9 +376,22 @@ function eliminarProductoVenta(index) {
 
 // ===== CONFIRMAR VENTA =====
 async function confirmarVenta() {
+  // Evitar doble click
+  if (procesandoVenta) {
+    mostrarNotificacion('Procesando venta... espera un momento', 'warning');
+    return;
+  }
+
   if (productosVenta.length === 0) {
     mostrarNotificacion('Agrega al menos un producto', 'warning');
     return;
+  }
+
+  procesandoVenta = true;
+  const btnConfirmar = document.getElementById('btnConfirmarVenta');
+  if (btnConfirmar) {
+    btnConfirmar.disabled = true;
+    btnConfirmar.textContent = 'Procesando...';
   }
 
   try {
@@ -321,9 +421,15 @@ async function confirmarVenta() {
       cargarProductos();
       cargarClientes();
       cargarResumenRapido();
+      procesandoVenta = false;
     }, 1500);
   } catch (error) {
     mostrarNotificacion(error.message, 'error');
+    procesandoVenta = false;
+    if (btnConfirmar) {
+      btnConfirmar.disabled = false;
+      btnConfirmar.textContent = 'Confirmar Venta';
+    }
   }
 }
 
