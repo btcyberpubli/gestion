@@ -6,8 +6,8 @@
 // DESARROLLO (localhost)
 // const API_URL = 'http://localhost:3000/api';
 
-// PRODUCCIÓN (VPS)
-const API_URL = 'http://148.230.72.182/api';
+// PRODUCCIÓN (Railway)
+const API_URL = 'https://server-production-6fa6.up.railway.app/api';
 
 // Obtener token del localStorage
 function getToken() {
