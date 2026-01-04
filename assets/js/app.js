@@ -7,6 +7,8 @@ let ventaActual = null;
 let clienteSeleccionado = null;
 let productosVenta = [];
 let procesandoVenta = false; // Flag para evitar doble click
+let tipoPagoSeleccionado = null;
+let montoPagado = 0;
 
 // ===== INICIALIZACIÓN =====
 document.addEventListener('DOMContentLoaded', () => {
@@ -96,14 +98,19 @@ async function abrirModalClientes() {
 
     response.clientes.forEach(c => {
       const fila = document.createElement('tr');
+      const totalPagado = c.total_pagado || 0;
+      
       fila.innerHTML = `
         <td>${c.nombre}</td>
         <td>${c.email}</td>
-        <td style="color: ${c.deuda_total > 0 ? '#ef4444' : '#10b981'}; font-weight: bold;">
+        <td style="color: ${c.deuda_total > 0 ? '#cc0000' : '#004466'}; font-weight: bold;">
           ${formatoMoneda(c.deuda_total)}
         </td>
+        <td style="color: #004466; font-weight: bold;">
+          ${formatoMoneda(totalPagado)}
+        </td>
         <td>
-          ${c.deuda_total > 0 ? `<button class="btn btn-sm btn-success" onclick="abrirModalPagarDeuda('${c.id}', '${c.nombre}', ${c.deuda_total})">Pagar</button>` : '<span style="color: #999;">Sin deuda</span>'}
+          ${c.deuda_total > 0 ? `<button class="btn btn-sm btn-success" onclick="abrirModalPagarDeuda('${c.id}', '${c.nombre}', ${c.deuda_total})">PAGAR</button>` : '<span style="color: #999; font-size: 12px;">AL DÍA</span>'}
         </td>
       `;
       tbody.appendChild(fila);
@@ -235,9 +242,12 @@ function abrirModalGenerarVenta() {
   ventaActual = null;
   clienteSeleccionado = null;
   productosVenta = [];
+  tipoPagoSeleccionado = null;
+  montoPagado = 0;
 
   document.getElementById('pasoCliente').style.display = 'block';
   document.getElementById('pasoProductos').style.display = 'none';
+  document.getElementById('pasoPago').style.display = 'none';
   document.getElementById('clienteVenta').value = '';
 
   abrirModal('modalGenerarVenta');
@@ -265,6 +275,44 @@ function continuarPasoProductos() {
 function volverPasoCliente() {
   document.getElementById('pasoCliente').style.display = 'block';
   document.getElementById('pasoProductos').style.display = 'none';
+}
+
+function continuarPagoPaso() {
+  if (productosVenta.length === 0) {
+    mostrarNotificacion('Agrega al menos un producto', 'warning');
+    return;
+  }
+
+  // Calcular total
+  const totalVenta = document.getElementById('totalVenta').textContent;
+  
+  document.getElementById('pasoProductos').style.display = 'none';
+  document.getElementById('pasoPago').style.display = 'block';
+  document.getElementById('totalPagoFinal').textContent = totalVenta;
+  document.getElementById('montoParcial').value = '';
+  document.getElementById('montoParcialdiv').style.display = 'none';
+
+  // Agregar listener para radio buttons
+  document.querySelectorAll('input[name="tipoPago"]').forEach(radio => {
+    radio.addEventListener('change', (e) => {
+      tipoPagoSeleccionado = e.target.value;
+      
+      if (tipoPagoSeleccionado === 'parcial') {
+        document.getElementById('montoParcialdiv').style.display = 'block';
+        document.getElementById('montoParcial').focus();
+      } else {
+        document.getElementById('montoParcialdiv').style.display = 'none';
+        montoPagado = tipoPagoSeleccionado === 'efectivo' ? parseFloat(document.getElementById('totalVenta').textContent.replace('$', '').replace(',', '')) : 0;
+      }
+    });
+  });
+}
+
+function volverPasoProductos() {
+  document.getElementById('pasoPago').style.display = 'none';
+  document.getElementById('pasoProductos').style.display = 'block';
+  tipoPagoSeleccionado = null;
+  montoPagado = 0;
 }
 
 // ===== AGREGAR PRODUCTO A VENTA =====
@@ -376,6 +424,35 @@ function eliminarProductoVenta(index) {
 
 // ===== CONFIRMAR VENTA =====
 async function confirmarVenta() {
+  // Validar forma de pago
+  if (!tipoPagoSeleccionado) {
+    mostrarNotificacion('Selecciona forma de pago', 'warning');
+    return;
+  }
+
+  // Obtener total primero
+  const totalText = document.getElementById('totalVenta').textContent;
+  const total = parseFloat(totalText.replace('$', '').replace(',', ''));
+
+  if (tipoPagoSeleccionado === 'parcial') {
+    const monto = parseFloat(document.getElementById('montoParcial').value);
+    if (!monto || monto <= 0) {
+      mostrarNotificacion('Ingresa monto a pagar', 'warning');
+      return;
+    }
+    if (monto > total) {
+      mostrarNotificacion('El monto no puede superar el total', 'warning');
+      return;
+    }
+    montoPagado = monto;
+  } else if (tipoPagoSeleccionado === 'efectivo') {
+    // Para efectivo, el monto pagado es el total
+    montoPagado = total;
+  } else {
+    // Para deuda, no hay monto pagado inicial
+    montoPagado = 0;
+  }
+
   // Evitar doble click
   if (procesandoVenta) {
     mostrarNotificacion('Procesando venta... espera un momento', 'warning');
@@ -388,16 +465,18 @@ async function confirmarVenta() {
   }
 
   procesandoVenta = true;
-  const btnConfirmar = document.getElementById('btnConfirmarVenta');
+  const btnConfirmar = document.querySelector('#pasoPago .btn-primary');
   if (btnConfirmar) {
     btnConfirmar.disabled = true;
     btnConfirmar.textContent = 'Procesando...';
   }
 
   try {
-    // 1. Crear venta
+    // 1. Crear venta CON tipo de pago y monto pagado
     const ventaResponse = await fetchAPI('/ventas', 'POST', {
-      id_cliente: clienteSeleccionado
+      id_cliente: clienteSeleccionado,
+      tipo_pago: tipoPagoSeleccionado,
+      monto_pagado: montoPagado
     });
     ventaActual = ventaResponse.venta;
 
@@ -414,7 +493,13 @@ async function confirmarVenta() {
     // 3. Confirmar venta
     const confirmResponse = await fetchAPI(`/ventas/${ventaActual.id_venta}/confirmar`, 'POST');
 
-    mostrarNotificacion('¡Venta confirmada exitosamente!', 'success');
+    const mensaje = tipoPagoSeleccionado === 'efectivo' 
+      ? '✅ Venta pagada en efectivo' 
+      : tipoPagoSeleccionado === 'parcial'
+      ? `✅ Venta con pago parcial (${formatoMoneda(montoPagado)})`
+      : '✅ Venta registrada - Cliente en deuda';
+
+    mostrarNotificacion(mensaje, 'success');
     
     setTimeout(() => {
       cerrarModal('modalGenerarVenta');
@@ -428,7 +513,7 @@ async function confirmarVenta() {
     procesandoVenta = false;
     if (btnConfirmar) {
       btnConfirmar.disabled = false;
-      btnConfirmar.textContent = 'Confirmar Venta';
+      btnConfirmar.textContent = 'CONFIRMAR VENTA';
     }
   }
 }

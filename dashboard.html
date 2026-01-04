@@ -35,21 +35,21 @@
         <button class="btn-secundario" onclick="abrirModalAgregarStock()">
           AGREGAR STOCK
         </button>
+        <button class="btn-secundario" onclick="abrirModalNuevoProducto()">
+          NUEVO PRODUCTO
+        </button>
         <button class="btn-secundario" onclick="abrirModalVerStock()">
           VER STOCK
-        </button>
-        <button class="btn-secundario" onclick="abrirModalClientes()">
-          CLIENTES
         </button>
       </div>
 
       <!-- REPORTES (Panel inferior) -->
       <div class="reportes-panel">
+        <button class="btn-reportes" onclick="abrirModalClientes()">
+          CLIENTES
+        </button>
         <button class="btn-reportes" onclick="abrirModalReportes()">
           REPORTES
-        </button>
-        <button class="btn-reportes" onclick="abrirModalNuevoProducto()">
-          NUEVO PRODUCTO
         </button>
       </div>
     </div>
@@ -208,7 +208,43 @@
 
         <div style="margin-top: 30px;">
           <button class="btn btn-secondary" onclick="volverPasoCliente()">← Anterior</button>
-          <button class="btn btn-primary" onclick="confirmarVenta()" style="margin-left: 10px;">Confirmar Venta</button>
+          <button class="btn btn-primary" onclick="continuarPagoPaso()" style="margin-left: 10px;">Siguiente →</button>
+        </div>
+      </div>
+
+      <!-- PASO 3: Forma de Pago -->
+      <div id="pasoPago" style="display: none;">
+        <h3 style="margin-bottom: 20px;">Paso 3: Forma de Pago</h3>
+
+        <div style="background: linear-gradient(135deg, #f0f4f8 0%, #e8ecf1 100%); padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+          <p style="margin: 0 0 15px 0; font-weight: 300; color: #1a1a1a;">Total a Pagar: <strong style="font-size: 20px;" id="totalPagoFinal">$0.00</strong></p>
+          
+          <div style="display: grid; grid-template-columns: 1fr; gap: 10px;">
+            <label style="display: flex; align-items: center; cursor: pointer; padding: 12px; background: white; border-radius: 8px;">
+              <input type="radio" name="tipoPago" value="efectivo" required style="margin-right: 10px;">
+              <span>PAGA EN EFECTIVO</span>
+            </label>
+            <label style="display: flex; align-items: center; cursor: pointer; padding: 12px; background: white; border-radius: 8px;">
+              <input type="radio" name="tipoPago" value="deuda" required style="margin-right: 10px;">
+              <span>QUEDA EN DEUDA</span>
+            </label>
+            <label style="display: flex; align-items: center; cursor: pointer; padding: 12px; background: white; border-radius: 8px;">
+              <input type="radio" name="tipoPago" value="parcial" required style="margin-right: 10px;">
+              <span>PAGO PARCIAL</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Si pago parcial, mostrar input -->
+        <div id="montoParcialdiv" style="display: none; margin-bottom: 20px;">
+          <label for="montoParcial">Monto a Pagar</label>
+          <input type="number" id="montoParcial" min="0" step="0.01" placeholder="0.00">
+          <p style="font-size: 12px; color: #666; margin-top: 5px;" id="montoRestante"></p>
+        </div>
+
+        <div style="margin-top: 30px;">
+          <button class="btn btn-secondary" onclick="volverPasoProductos()">← Anterior</button>
+          <button class="btn btn-primary" onclick="confirmarVenta()" style="margin-left: 10px;">CONFIRMAR VENTA</button>
         </div>
       </div>
     </div>
@@ -227,6 +263,7 @@
             <th>Nombre</th>
             <th>Email</th>
             <th>Deuda Total</th>
+            <th>Total Pagado</th>
             <th>Acción</th>
           </tr>
         </thead>
