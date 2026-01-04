@@ -4,10 +4,10 @@
  */
 
 // DESARROLLO (localhost)
-const API_URL = 'http://localhost:3000/api';
+// const API_URL = 'http://localhost:3000/api';
 
 // PRODUCCIÓN (VPS)
-// const API_URL = 'http://148.230.72.182/api';
+const API_URL = 'http://148.230.72.182/api';
 
 // Obtener token del localStorage
 function getToken() {
