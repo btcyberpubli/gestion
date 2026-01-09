@@ -48,6 +48,9 @@
         <button class="btn-reportes" onclick="abrirModalClientes()">
           CLIENTES
         </button>
+        <button class="btn-reportes" onclick="abrirModalNuevoCliente()">
+          NUEVO CLIENTE
+        </button>
         <button class="btn-reportes" onclick="abrirModalReportes()">
           REPORTES
         </button>
@@ -272,6 +275,42 @@
       <div class="modal-footer">
         <button class="btn btn-primary" onclick="cerrarModal('modalClientes')">Cerrar</button>
       </div>
+    </div>
+  </div>
+
+  <!-- ===== MODAL: NUEVO CLIENTE ===== -->
+  <div id="modalNuevoCliente" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>👤 Nuevo Cliente</h2>
+        <button class="modal-close" onclick="cerrarModal('modalNuevoCliente')">&times;</button>
+      </div>
+      <form id="formNuevoCliente">
+        <div class="form-group">
+          <label for="nombreCliente">Nombre del Cliente</label>
+          <input type="text" id="nombreCliente" required placeholder="Ej: Juan Pérez">
+        </div>
+        <div class="form-group">
+          <label for="emailCliente">Email</label>
+          <input type="email" id="emailCliente" required placeholder="juan@email.com">
+        </div>
+        <div class="form-group">
+          <label for="telefonoCliente">Teléfono</label>
+          <input type="tel" id="telefonoCliente" placeholder="1234567890">
+        </div>
+        <div class="form-group">
+          <label for="direccionCliente">Dirección</label>
+          <input type="text" id="direccionCliente" placeholder="Calle 123">
+        </div>
+        <div class="form-group">
+          <label for="ciudadCliente">Ciudad</label>
+          <input type="text" id="ciudadCliente" placeholder="CABA">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="cerrarModal('modalNuevoCliente')">Cancelar</button>
+          <button type="submit" class="btn btn-primary">Crear Cliente</button>
+        </div>
+      </form>
     </div>
   </div>
 

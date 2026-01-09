@@ -192,7 +192,7 @@ document.getElementById('formNuevoProducto')?.addEventListener('submit', async (
   try {
     const response = await fetchAPI('/productos', 'POST', {
       nombre,
-      precio_compra,
+      costo: precio_compra,
       precio_venta,
       stock_actual,
       stock_minimo
@@ -201,6 +201,38 @@ document.getElementById('formNuevoProducto')?.addEventListener('submit', async (
     mostrarNotificacion(`✅ Producto creado: ${response.producto.nombre}`, 'success');
     cerrarModal('modalNuevoProducto');
     cargarProductos();
+  } catch (error) {
+    mostrarNotificacion(error.message, 'error');
+  }
+});
+
+// ===== NUEVO CLIENTE =====
+function abrirModalNuevoCliente() {
+  document.getElementById('formNuevoCliente').reset();
+  abrirModal('modalNuevoCliente');
+}
+
+document.getElementById('formNuevoCliente')?.addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  const nombre = document.getElementById('nombreCliente').value;
+  const email = document.getElementById('emailCliente').value;
+  const telefono = document.getElementById('telefonoCliente').value;
+  const direccion = document.getElementById('direccionCliente').value;
+  const ciudad = document.getElementById('ciudadCliente').value;
+
+  try {
+    const response = await fetchAPI('/clientes', 'POST', {
+      nombre,
+      email,
+      telefono,
+      direccion,
+      ciudad
+    });
+
+    mostrarNotificacion(`✅ Cliente creado: ${response.cliente.nombre}`, 'success');
+    cerrarModal('modalNuevoCliente');
+    cargarClientes();
   } catch (error) {
     mostrarNotificacion(error.message, 'error');
   }
