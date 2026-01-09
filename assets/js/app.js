@@ -100,6 +100,13 @@ async function abrirModalClientes() {
       const fila = document.createElement('tr');
       const totalPagado = c.total_pagado || 0;
       
+      const botonesHTML = `
+        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+          <button class="btn btn-sm btn-success" onclick="abrirModalPagarDeuda('${c.id}', '${c.nombre}', ${c.deuda_total})" style="flex: 1; min-width: 80px; font-size: 12px; padding: 8px;">PAGAR</button>
+          <button class="btn btn-sm btn-danger" onclick="eliminarClienteConfirm('${c.id}', '${c.nombre}')" style="flex: 1; min-width: 80px; font-size: 12px; padding: 8px;">ELIMINAR</button>
+        </div>
+      `;
+      
       fila.innerHTML = `
         <td>${c.nombre}</td>
         <td>${c.email}</td>
@@ -109,9 +116,8 @@ async function abrirModalClientes() {
         <td style="color: #004466; font-weight: bold;">
           ${formatoMoneda(totalPagado)}
         </td>
-        <td>
-          <button class="btn btn-sm btn-success" onclick="abrirModalPagarDeuda('${c.id}', '${c.nombre}', ${c.deuda_total})" style="margin-right: 5px;">PAGAR</button>
-          <button class="btn btn-sm btn-danger" onclick="eliminarClienteConfirm('${c.id}', '${c.nombre}')">ELIMINAR</button>
+        <td style="min-width: 200px;">
+          ${botonesHTML}
         </td>
       `;
       tbody.appendChild(fila);
