@@ -302,6 +302,13 @@ async function abrirModalVerStock() {
         ? '<span class="stock-bajo">BAJO</span>'
         : '<span class="stock-ok">OK</span>';
 
+      const botonesHTML = `
+        <div style="display: flex; gap: 8px;">
+          <button class="btn btn-sm btn-success" onclick="agregarStockProducto('${p.id}', '${p.nombre}')" style="flex: 1; min-width: 60px; font-size: 11px; padding: 6px;">+ Stock</button>
+          <button class="btn btn-sm btn-danger" onclick="restarStockProducto('${p.id}', '${p.nombre}')" style="flex: 1; min-width: 60px; font-size: 11px; padding: 6px;">- Stock</button>
+        </div>
+      `;
+
       fila.innerHTML = `
         <td>${p.nombre}</td>
         <td><strong>${p.stock_actual}</strong></td>
@@ -309,11 +316,56 @@ async function abrirModalVerStock() {
         <td>${formatoMoneda(p.costo)}</td>
         <td>${formatoMoneda(p.precio_venta)}</td>
         <td>${stockEstado}</td>
+        <td style="min-width: 150px;">${botonesHTML}</td>
       `;
       tbody.appendChild(fila);
     });
 
     abrirModal('modalVerStock');
+  } catch (error) {
+    mostrarNotificacion(error.message, 'error');
+  }
+}
+
+// ===== AGREGAR STOCK DESDE MODAL INVENTARIO =====
+async function agregarStockProducto(idProducto, nombreProducto) {
+  const cantidad = prompt(`Agregar stock a: ${nombreProducto}\n\n¿Cuántas unidades?`, '1');
+  
+  if (!cantidad || isNaN(parseInt(cantidad)) || parseInt(cantidad) <= 0) {
+    return;
+  }
+
+  try {
+    const response = await fetchAPI(`/productos/${idProducto}/stock`, 'POST', {
+      cantidad: parseInt(cantidad),
+      tipo: 'entrada'
+    });
+
+    mostrarNotificacion(`✅ Stock agregado: ${response.producto.nombre}`, 'success');
+    abrirModalVerStock(); // Recargar modal
+    cargarProductos();
+  } catch (error) {
+    mostrarNotificacion(error.message, 'error');
+  }
+}
+
+// ===== RESTAR STOCK DESDE MODAL INVENTARIO =====
+async function restarStockProducto(idProducto, nombreProducto) {
+  const cantidad = prompt(`Restar stock a: ${nombreProducto}\n\n¿Cuántas unidades?`, '1');
+  
+  if (!cantidad || isNaN(parseInt(cantidad)) || parseInt(cantidad) <= 0) {
+    return;
+  }
+
+  try {
+    const response = await fetchAPI(`/productos/${idProducto}/stock`, 'POST', {
+      cantidad: parseInt(cantidad),
+      tipo: 'salida'
+    });
+
+    mostrarNotificacion(`✅ Stock restado: ${response.producto.nombre}`, 'success');
+    abrirModalVerStock(); // Recargar modal
+    cargarProductos();
   } catch (error) {
     mostrarNotificacion(error.message, 'error');
   }
