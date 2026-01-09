@@ -110,7 +110,8 @@ async function abrirModalClientes() {
           ${formatoMoneda(totalPagado)}
         </td>
         <td>
-          ${c.deuda_total > 0 ? `<button class="btn btn-sm btn-success" onclick="abrirModalPagarDeuda('${c.id}', '${c.nombre}', ${c.deuda_total})">PAGAR</button>` : '<span style="color: #999; font-size: 12px;">AL DÍA</span>'}
+          <button class="btn btn-sm btn-success" onclick="abrirModalPagarDeuda('${c.id}', '${c.nombre}', ${c.deuda_total})" style="margin-right: 5px;">PAGAR</button>
+          <button class="btn btn-sm btn-danger" onclick="eliminarClienteConfirm('${c.id}', '${c.nombre}')">ELIMINAR</button>
         </td>
       `;
       tbody.appendChild(fila);
@@ -137,6 +138,29 @@ async function abrirModalPagarDeuda(clienteId, clienteNombre, deudaTotal) {
 
     mostrarNotificacion(`✅ Deuda pagada exitosamente`, 'success');
     abrirModalClientes(); // Recargar modal
+  } catch (error) {
+    mostrarNotificacion(error.message, 'error');
+  }
+}
+
+// ===== ELIMINAR CLIENTE =====
+function eliminarClienteConfirm(clienteId, clienteNombre) {
+  const confirmEliminar = confirm(`¿Estás seguro de que deseas eliminar a "${clienteNombre}"?\n\nEsta acción no se puede deshacer.`);
+  
+  if (!confirmEliminar) {
+    return;
+  }
+
+  eliminarCliente(clienteId);
+}
+
+async function eliminarCliente(clienteId) {
+  try {
+    const response = await fetchAPI(`/clientes/${clienteId}`, 'DELETE');
+    
+    mostrarNotificacion(`✅ ${response.mensaje}`, 'success');
+    abrirModalClientes(); // Recargar modal
+    cargarClientes(); // Recargar dropdown de ventas
   } catch (error) {
     mostrarNotificacion(error.message, 'error');
   }
