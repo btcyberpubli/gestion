@@ -211,7 +211,6 @@ document.getElementById('formNuevoProducto')?.addEventListener('submit', async (
   const nombre = document.getElementById('nombreProducto').value;
   const precio_compra = parseFloat(document.getElementById('precioCosto').value);
   const precio_venta = parseFloat(document.getElementById('precioVenta').value);
-  const stock_actual = parseInt(document.getElementById('stockInicial').value);
   const stock_minimo = parseInt(document.getElementById('stockMinimo').value);
 
   if (precio_venta <= precio_compra) {
@@ -224,7 +223,6 @@ document.getElementById('formNuevoProducto')?.addEventListener('submit', async (
       nombre,
       costo: precio_compra,
       precio_venta,
-      stock_actual,
       stock_minimo
     });
 
