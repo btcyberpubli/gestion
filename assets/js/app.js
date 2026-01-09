@@ -216,18 +216,11 @@ document.getElementById('formNuevoCliente')?.addEventListener('submit', async (e
   e.preventDefault();
 
   const nombre = document.getElementById('nombreCliente').value;
-  const email = document.getElementById('emailCliente').value;
-  const telefono = document.getElementById('telefonoCliente').value;
-  const direccion = document.getElementById('direccionCliente').value;
-  const ciudad = document.getElementById('ciudadCliente').value;
 
   try {
     const response = await fetchAPI('/clientes', 'POST', {
       nombre,
-      email,
-      telefono,
-      direccion,
-      ciudad
+      email: `cliente.${Date.now()}@temporal.com`
     });
 
     mostrarNotificacion(`✅ Cliente creado: ${response.cliente.nombre}`, 'success');
@@ -237,6 +230,36 @@ document.getElementById('formNuevoCliente')?.addEventListener('submit', async (e
     mostrarNotificacion(error.message, 'error');
   }
 });
+
+// ===== NUEVO CLIENTE DESDE VENTA =====
+function abrirModalNuevoClienteVenta() {
+  const nombreCliente = prompt('Ingresa el nombre del cliente:');
+  
+  if (!nombreCliente || nombreCliente.trim() === '') {
+    return;
+  }
+
+  crearClienteRapido(nombreCliente);
+}
+
+async function crearClienteRapido(nombre) {
+  try {
+    const response = await fetchAPI('/clientes', 'POST', {
+      nombre,
+      email: `cliente.${Date.now()}@temporal.com`
+    });
+
+    mostrarNotificacion(`✅ Cliente creado: ${response.cliente.nombre}`, 'success');
+    cargarClientes();
+    
+    // Auto-seleccionar el nuevo cliente
+    setTimeout(() => {
+      document.getElementById('clienteVenta').value = response.cliente.id;
+    }, 300);
+  } catch (error) {
+    mostrarNotificacion(error.message, 'error');
+  }
+}
 
 // ===== VER STOCK =====
 async function abrirModalVerStock() {

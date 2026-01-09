@@ -164,6 +164,7 @@
             <option value="">Seleccionar cliente...</option>
           </select>
         </div>
+        <button class="btn btn-secondary" onclick="abrirModalNuevoClienteVenta()" style="margin-bottom: 20px; width: 100%;">+ Agregar nuevo cliente</button>
         <button class="btn btn-primary" onclick="continuarPasoProductos()">Siguiente →</button>
       </div>
 
@@ -273,6 +274,7 @@
         <tbody></tbody>
       </table>
       <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="abrirModalNuevoCliente()">+ Nuevo Cliente</button>
         <button class="btn btn-primary" onclick="cerrarModal('modalClientes')">Cerrar</button>
       </div>
     </div>
@@ -289,22 +291,6 @@
         <div class="form-group">
           <label for="nombreCliente">Nombre del Cliente</label>
           <input type="text" id="nombreCliente" required placeholder="Ej: Juan Pérez">
-        </div>
-        <div class="form-group">
-          <label for="emailCliente">Email</label>
-          <input type="email" id="emailCliente" required placeholder="juan@email.com">
-        </div>
-        <div class="form-group">
-          <label for="telefonoCliente">Teléfono</label>
-          <input type="tel" id="telefonoCliente" placeholder="1234567890">
-        </div>
-        <div class="form-group">
-          <label for="direccionCliente">Dirección</label>
-          <input type="text" id="direccionCliente" placeholder="Calle 123">
-        </div>
-        <div class="form-group">
-          <label for="ciudadCliente">Ciudad</label>
-          <input type="text" id="ciudadCliente" placeholder="CABA">
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" onclick="cerrarModal('modalNuevoCliente')">Cancelar</button>
